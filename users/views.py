@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from .models import Superviseur, Employe, RessourcesHumaines
 
@@ -9,13 +9,26 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            if Superviseur.objects.filter(user=user).exists():
-                return redirect('superviseur_dashboard')
-            elif Employe.objects.filter(user=user).exists():
-                return redirect('employe_dashboard')
-            elif RessourcesHumaines.objects.filter(user=user).exists():
-                return redirect('ressources_humaines_dashboard')
+            return redirect('dashboard')
         else:
-            return render(request, 'users/login.html', {'error': 'Invalid username or password'})
+            return render(request, 'users/login.html', {'error': 'Nom d\'utilisateur ou mot de passe incorrect.'})
     else:
+        if request.user.is_authenticated:
+            return redirect('dashboard')
         return render(request, 'users/login.html')
+    
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+def dashboard_view(request):
+    if request.user.is_authenticated:
+        if Superviseur.objects.filter(user=request.user).exists():
+            return render(request, 'users/superviseur_dashboard.html')
+        elif Employe.objects.filter(user=request.user).exists():
+            return render(request, 'users/employe_dashboard.html')
+        elif RessourcesHumaines.objects.filter(user=request.user).exists():
+            return render(request, 'users/ressources_humaines_dashboard.html')
+        else:
+            return render(request, 'users/dashboard.html')
+    else:
+        return redirect('login')
