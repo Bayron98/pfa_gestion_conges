@@ -122,7 +122,7 @@ input:focus, textarea:focus, select:focus{
     text-align: center;
 }
 
-.logout-button {
+.logout-button{
     display: block;
     width: 200px;
     margin: 10px auto;
@@ -136,7 +136,7 @@ input:focus, textarea:focus, select:focus{
 }
 
 
-.logout-button:hover {
+.logout-button:hover{
     background-color: #b30000;
 }
 
@@ -175,4 +175,43 @@ input:focus,
 textarea:focus, select:focus {
     background-color: #f0f0f0;
     box-shadow: 0 0 15px 4px rgba(0,0,0,0.1);
+}
+
+.action{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.accept{
+    display: block;
+    padding: 10px;
+    text-align: center;
+    background-color: #28a745;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;   
+}
+.accept:hover{
+    background-color: #218838;
+}
+.reject {
+    display: block;
+    padding: 10px;
+    text-align: center;
+    background-color: #ff0000;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+
+.reject:hover {
+    background-color: #b30000;
+}
+.accept, .reject{
+    width: 120px;
+    margin: 10px 4px;
 }

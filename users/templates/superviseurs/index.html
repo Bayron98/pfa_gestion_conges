@@ -1,0 +1,124 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tableau de bord</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h2>Tableau de bord</h2>
+    <h3>Bonjour, {{superviseur.user.first_name}} {{superviseur.user.last_name}}</h3>
+    <p>Vous êtes connecté en tant que superviseur.</p>
+    <a class="logout-button" href="{% url 'logout' %}">Déconnexion</a>
+    {% if messages %}
+    {% for message in messages %}
+        <div class="error">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% endif %}
+    <table>
+        <thead>
+            <tr>
+                <th>Employé</th>
+                <th>Début</th>
+                <th>Fin</th>
+                <th>Durée (jours)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for demande in demandes_conge_en_attente %}
+            <tr>
+                <td>{{ demande.employe.user.first_name }} {{ demande.employe.user.last_name }}</td>
+                <td>{{ demande.date_debut }}</td>
+                <td>{{ demande.date_fin }}</td>
+                <td>{{ demande.duree }}</td>
+                <td class="action">
+                    <a class=" accept" href="{% url 'accepter' demande.id %}">Accepter</a>
+                    <a class=" reject" href="{% url 'refuser' demande.id %}">Refuser</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Aucune demande de congé en attente.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p>Demandes de congé approuvées <span class="nbr">{{ demandes_conge_approuvees.count }}</span></p>
+    <table>
+        <thead>
+            <tr>
+                <th>Employé</th>
+                <th>Début</th>
+                <th>Fin</th>
+                <th>Durée (jours)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for demande in demandes_conge_approuvees %}
+            <tr>
+                <td>{{ demande.employe.user.first_name }} {{ demande.employe.user.last_name }}</td>
+                <td>{{ demande.date_debut }}</td>
+                <td>{{ demande.date_fin }}</td>
+                <td>{{ demande.duree }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Aucune demande de congé approuvée.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>Demandes de congé refusées <span class="nbr">{{ demandes_conge_refusees.count }}</span></p>
+<table>
+    <thead>
+        <tr>
+            <th>Employé</th>
+            <th>Début</th>
+            <th>Fin</th>
+            <th>Durée (jours)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for demande in demandes_conge_refusees %}
+        <tr>
+            <td>{{ demande.employe.user.first_name }} {{ demande.employe.user.last_name }}</td>
+            <td>{{ demande.date_debut }}</td>
+            <td>{{ demande.date_fin }}</td>
+            <td>{{ demande.duree }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Aucune demande de congé refusée.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    <p>Soldes de congé des employés</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Employé</th>
+                <th>Solde de congé (jours)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employe in employes %}
+            <tr>
+                <td>{{ employe.user.first_name }} {{ employe.user.last_name }}</td>
+                <td>{{ employe.solde_conge }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">Aucun employé trouvé.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

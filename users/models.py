@@ -35,7 +35,7 @@ class DemandeConge(models.Model):
         if self.etat != 'APPROUVEE':
             duree_conge = self.duree()
             if self.employe.solde_conge < duree_conge:
-                raise ValueError("L'employé n'a pas suffisamment de jours de congé disponibles.")
+                raise ValueError(f"L'employé {self.employe.user.first_name} {self.employe.user.last_name} n'a pas suffisamment de jours de congé disponibles.")
             self.etat = 'APPROUVEE'
             self.employe.solde_conge -= duree_conge
             self.employe.save()

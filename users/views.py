@@ -6,7 +6,8 @@ from .forms import DemandeCongeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
-
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -46,6 +47,38 @@ def employe_index(request):
     }
     return render(request, 'employes/index.html', context)
 
+def superviseur_index(request):
+    superviseur = Superviseur.objects.get(user=request.user)
+    employes = Employe.objects.filter(superviseur=superviseur)
+    
+    demandes_conge_en_attente = DemandeConge.objects.filter(employe__in=employes, etat='EN_ATTENTE')
+    demandes_conge_approuvees = DemandeConge.objects.filter(employe__in=employes, etat='APPROUVEE')
+    demandes_conge_refusees = DemandeConge.objects.filter(employe__in=employes, etat='REFUSEE')
+
+    context = {
+        'superviseur': superviseur,
+        'employes': employes,
+        'demandes_conge_en_attente': demandes_conge_en_attente,
+        'demandes_conge_approuvees': demandes_conge_approuvees,
+        'demandes_conge_refusees': demandes_conge_refusees,
+    }
+    return render(request, 'superviseurs/index.html', context)
+
+def accepter(request, id):
+    demande = get_object_or_404(DemandeConge, id=id)
+    try:
+        demande.approuver()
+    except ValueError as e:
+        messages.error(request, str(e))
+
+    return redirect('dashboard')
+
+def refuser(request, id):
+    demande = get_object_or_404(DemandeConge, id=id)
+    demande.etat = 'REFUSEE'
+    demande.save()
+    return redirect('dashboard')
+
 @login_required   
 def create(request):
     if request.method == 'POST':
@@ -55,6 +88,8 @@ def create(request):
             demande.employe = Employe.objects.get(user=request.user)
             if DemandeConge.objects.filter(employe=demande.employe, date_debut__lte=demande.date_fin, date_fin__gte=demande.date_debut).exists():
                 form.add_error(None, "Une demande de congé pour les mêmes dates existe déjà.")
+            elif demande.duree() > demande.employe.solde_conge:
+                form.add_error(None, "La durée de la demande de congé est supérieure à votre solde de congé.")
             else:
                 demande.save()
                 return redirect('dashboard')
@@ -64,8 +99,7 @@ def create(request):
 
 
 
-def superviseur_index(request):
-    pass
+
 def ressourceshumaines_index(request):
     pass
 
