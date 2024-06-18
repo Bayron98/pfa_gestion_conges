@@ -3,16 +3,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Connexion</title>
+    <title>Créer une demande de stage</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h2>Connexion</h2>
-
+    <h2>Créer une demande de stage</h2>
+    <a href="{% url 'dashboard' %}">Retour</a>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Se connecter</button>
+        <button type="submit">Envoyer</button>
     </form>
+
 </body>
 </html>
