@@ -4,10 +4,11 @@ from .models import Superviseur, Employe, RessourcesHumaines, DemandeConge
 from django.http import HttpResponse
 from .forms import DemandeCongeForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -35,7 +36,7 @@ def dashboard_view(request):
         elif RessourcesHumaines.objects.filter(user=request.user).exists():
             return ressourceshumaines_index(request)
         else:
-            return HttpResponse("Vous n'êtes pas autorisé à voir cette page.")
+            return redirect('admin:index')
 
 
 def employe_index(request):
@@ -50,7 +51,6 @@ def employe_index(request):
 def superviseur_index(request):
     superviseur = Superviseur.objects.get(user=request.user)
     employes = Employe.objects.filter(superviseur=superviseur)
-    
     demandes_conge_en_attente = DemandeConge.objects.filter(employe__in=employes, etat='EN_ATTENTE')
     demandes_conge_approuvees = DemandeConge.objects.filter(employe__in=employes, etat='APPROUVEE')
     demandes_conge_refusees = DemandeConge.objects.filter(employe__in=employes, etat='REFUSEE')
@@ -78,6 +78,36 @@ def refuser(request, id):
     demande.etat = 'REFUSEE'
     demande.save()
     return redirect('dashboard')
+
+
+
+@login_required
+def security(request):
+    if Superviseur.objects.filter(user=request.user).exists():
+        return security_superviseur(request)
+    else:
+        return security_employe(request)
+def security_superviseur(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user) 
+            return redirect('dashboard')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'superviseurs/security.html', {'form': form})
+
+def security_employe(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user) 
+            return redirect('dashboard')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'employes/security.html', {'form': form})
 
 @login_required   
 def create(request):

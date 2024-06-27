@@ -1,16 +1,20 @@
-{% load static %}
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Tableau de bord</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <h2>Tableau de bord</h2>
-    <h3>Bonjour, {{superviseur.user.first_name}} {{superviseur.user.last_name}}</h3>
-    <p>Vous êtes connecté en tant que superviseur.</p>
-    <a class="logout-button" href="{% url 'logout' %}">Déconnexion</a>
+{% block title %}Superviseur{% endblock %}
+
+{% block topbar-left-container %}
+<div class="tb-title"><i class="fa-solid fa-user"></i> Espace Superviseur : <span class="tp-content">{{ user.first_name }} {{ user.last_name }}</span></div>
+<div class="tb-title">/</div>
+<div class="tb-title"><i class="fa-solid fa-user-group"></i> Equipe : <span class="tp-content">{{ superviseur.equipe.nom }}</span></div>
+
+{% endblock %}
+
+{% block topbar-right-container %}
+<a class="security-button" href="{% url 'security' %}"><i class="fa-solid fa-lock"></i> Securité</a>
+<a class="logout-button" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
+{% endblock %}
+
+{% block content %}
     {% if messages %}
     {% for message in messages %}
         <div class="error">
@@ -18,6 +22,7 @@
         </div>
     {% endfor %}
     {% endif %}
+    <h3>Demandes de congé en attente</h3>
     <table>
         <thead>
             <tr>
@@ -36,8 +41,8 @@
                 <td>{{ demande.date_fin }}</td>
                 <td>{{ demande.duree }}</td>
                 <td class="action">
-                    <a class=" accept" href="{% url 'accepter' demande.id %}">Accepter</a>
-                    <a class=" reject" href="{% url 'refuser' demande.id %}">Refuser</a>
+                    <a class=" accept" href="{% url 'accepter' demande.id %}"><i class="fa-solid fa-check"></i> Accepter</a>
+                    <a class=" reject" href="{% url 'refuser' demande.id %}"><i class="fa-solid fa-xmark"></i> Refuser</a>
                 </td>
             </tr>
             {% empty %}
@@ -48,7 +53,7 @@
         </tbody>
     </table>
 
-    <p>Demandes de congé approuvées <span class="nbr">{{ demandes_conge_approuvees.count }}</span></p>
+    <h3>Demandes de congé approuvées <span class="nbr">{{ demandes_conge_approuvees.count }}</span></h3>
     <table>
         <thead>
             <tr>
@@ -73,7 +78,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <p>Demandes de congé refusées <span class="nbr">{{ demandes_conge_refusees.count }}</span></p>
+    <h3>Demandes de congé refusées <span class="nbr">{{ demandes_conge_refusees.count }}</span></h3>
 <table>
     <thead>
         <tr>
@@ -99,7 +104,7 @@
     </tbody>
 </table>
 
-    <p>Soldes de congé des employés</p>
+    <h3>Soldes de congé des employés</h3>
     <table>
         <thead>
             <tr>
@@ -120,5 +125,4 @@
             {% endfor %}
         </tbody>
     </table>
-</body>
-</html>
+{% endblock %}

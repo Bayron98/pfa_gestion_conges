@@ -2,6 +2,14 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django import forms
 from .models import DemandeConge, TypeConge
+from django.contrib.auth.forms import PasswordChangeForm as AuthPasswordChangeForm
+
+class PasswordChangeForm(AuthPasswordChangeForm):
+    old_password = forms.CharField(label='Mot de passe actuel', widget=forms.PasswordInput)
+    new_password1 = forms.CharField(label='Nouveau mot de passe', widget=forms.PasswordInput)
+    new_password2 = forms.CharField(label='Vérification du mot de passe', widget=forms.PasswordInput)
+
+
 class DemandeCongeForm(forms.ModelForm):
     class Meta:
         model = DemandeConge

@@ -1,23 +1,28 @@
-{% load static %}
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Tableau de bord</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <h2>Tableau de bord</h2>
-    <h3>Bonjour, {{employe.user.first_name}} {{employe.user.last_name}}</h3>
+{% block title %}Employe{% endblock %}
+
+{% block topbar-left-container %}
+<div class="tb-title"><i class="fa-solid fa-user"></i> Espace Employé : <span class="tp-content">{{ user.first_name }} {{ user.last_name }}</span></div>
+<div class="tb-title">/</div>
+<div class="tb-title"><i class="fa-solid fa-user-group"></i> Equipe : <span class="tp-content">{{ employe.equipe.nom }}</span></div>
+
+{% endblock %}
+
+{% block topbar-right-container %}
+<a class="security-button" href="{% url 'security' %}"><i class="fa-solid fa-lock"></i> Securité</a>
+<a class="logout-button" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
+{% endblock %}
+
+{% block content %}
     <p> Votre solde de congé est de <span class="nbr">{{employe.solde_conge}}</span> jours</p>
     <p>Vous avez <span class="nbr">{{demandes_conge.count}}</span> demande(s) de congé</p>
     <div class="actions">
         {% if employe.solde_conge > 0 %}
-        <a href="{% url 'create' %}">Créer une demande de congé</a>
+        <a href="{% url 'create' %}"><i class="fa-solid fa-plus"></i> Créer une demande de congé</a>
         {% else %}
         <p class="plus_conge">Vous n'avez plus de jours de congé disponibles.</p>
         {% endif %}
-        <a class="logout-button" href="{% url 'logout' %}">Déconnexion</a>
     </div>
     <h3>Vos demandes de congé</h3>
     <table>
@@ -39,8 +44,11 @@
                 <td>{{ demande.raison }}</td>
                 <td>{{ demande.get_etat_display }}</td>
             </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Vous n'avez pas de demande de congé.</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
-</body>
-</html>
+{% endblock %}
