@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Ressources Humaines{% endblock %}
+
+{% block topbar-left-container %}
+<div class="tb-title"><i class="fa-solid fa-user"></i> Espace Ressources Humaines : <span class="tp-content">{{ user.first_name }} {{ user.last_name }}</span></div>
+{% endblock %}
+
+{% block topbar-right-container %}
+<a class="return-button" href="{% url 'dashboard' %}"><i class="fa-solid fa-arrow-rotate-left"></i> Retour</a>
+<a class="security-button" href="{% url 'security' %}"><i class="fa-solid fa-lock"></i> Securité</a>
+<a class="logout-button" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
+{% endblock %}
+
+{% block content %}
+<h2>
+    {% if model == 'Equipe' %}
+        Modifier Équipe
+    {% elif model == 'TypeConge' %}
+        Modifier Type de Congé
+    {% endif %}
+</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enregistrer</button>
+</form>
+
+{% endblock %}

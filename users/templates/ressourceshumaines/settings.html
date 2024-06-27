@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Ressources Humaines{% endblock %}
+
+{% block topbar-left-container %}
+<div class="tb-title"><i class="fa-solid fa-user"></i> Espace Ressources Humaines : <span class="tp-content">{{ user.first_name }} {{ user.last_name }}</span></div>
+{% endblock %}
+
+{% block topbar-right-container %}
+<a class="return-button" href="{% url 'dashboard' %}"><i class="fa-solid fa-arrow-rotate-left"></i> Retour</a>
+<a class="security-button" href="{% url 'security' %}"><i class="fa-solid fa-lock"></i> Securité</a>
+<a class="logout-button" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
+{% endblock %}
+
+{% block content %}
+<h2>Equipes</h2>
+<table>
+    <tr>
+        <th>Nom</th>
+        <th>Seuil de congés</th>
+        <th>Action</th>
+    </tr>
+    {% for equipe in equipes %}
+    <tr>
+        <td>{{ equipe.nom }}</td>
+        <td>{{ equipe.seuil_conges }}</td>
+        <td class="action">
+            <a class="accept" href="{% url 'modify' equipe.id 'Equipe' %}"><i class="fa-solid fa-pencil"></i> Modifier</a>
+            <a class="reject" href="{% url 'delete' equipe.id 'Equipe' %}"><i class="fa-solid fa-trash"></i> Supprimer</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3">Aucune équipe.</td>
+    {% endfor %}
+</table>
+
+<h2>Types de congé</h2>
+<table>
+    <tr>
+        <th>Nom</th>
+        <th>Action</th>
+    </tr>
+    {% for type_conge in types_conge %}
+    <tr>
+        <td>{{ type_conge.nom }}</td>
+        <td class="action">
+            <a class="accept" href="{% url 'modify' type_conge.id 'TypeConge' %}"><i  class="fa-solid fa-pencil"></i> Modifier</a>
+            <a class="reject" href="{% url 'delete' type_conge.id 'TypeConge' %}"> <i class="fa-solid fa-trash"></i> Supprimer</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="2">Aucun type de congé.</td>
+    {% endfor %}
+</table>
+{% endblock %}

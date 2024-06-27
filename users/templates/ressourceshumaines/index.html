@@ -1,15 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Superviseur{% endblock %}
+{% block title %}Ressources Humaines{% endblock %}
+
 
 {% block topbar-left-container %}
-<div class="tb-title"><i class="fa-solid fa-user"></i> Espace Superviseur : <span class="tp-content">{{ user.first_name }} {{ user.last_name }}</span></div>
-<div class="tb-title">/</div>
-<div class="tb-title"><i class="fa-solid fa-user-group"></i> Equipe : <span class="tp-content">{{ superviseur.equipe.nom }}</span></div>
-
+<div class="tb-title"><i class="fa-solid fa-user"></i> Espace Ressources Humaines : <span class="tp-content">{{ user.first_name }} {{ user.last_name }}</span></div>
 {% endblock %}
 
 {% block topbar-right-container %}
+<a class="settings-button" href="{% url 'settings' %}"><i class="fa-solid fa-cog"></i>  Congés</a>
 <a class="security-button" href="{% url 'security' %}"><i class="fa-solid fa-lock"></i> Securité</a>
 <a class="logout-button" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
 {% endblock %}
@@ -22,6 +21,31 @@
         </div>
     {% endfor %}
     {% endif %}
+
+    <h3>Soldes de congé des employés</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Employé</th>
+                <th>Solde de congé (jours)</th>
+                <th>Superviseur</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employe in employes %}
+            <tr>
+                <td>{{ employe.user.first_name }} {{ employe.user.last_name }}</td>
+                <td>{{ employe.solde_conge }}</td>
+                <td>{{ employe.superviseur.user.first_name }} {{ employe.superviseur.user.last_name }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">Aucun employé trouvé.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     <h3>Demandes de congé en attente</h3>
     <table>
         <thead>
@@ -31,7 +55,7 @@
                 <th>Fin</th>
                 <th>Durée (jours)</th>
                 <th>Raison</th>
-                <th>Action</th>
+                <th>Superviseur</th>
             </tr>
         </thead>
         <tbody>
@@ -42,10 +66,7 @@
                 <td>{{ demande.date_fin }}</td>
                 <td>{{ demande.duree }}</td>
                 <td>{{ demande.raison }}</td>
-                <td class="action">
-                    <a class=" accept" href="{% url 'accepter' demande.id %}"><i class="fa-solid fa-check"></i> Accepter</a>
-                    <a class=" reject" href="{% url 'refuser' demande.id %}"><i class="fa-solid fa-xmark"></i> Refuser</a>
-                </td>
+                <td>{{ demande.employe.superviseur.user.first_name }} {{ demande.employe.superviseur.user.last_name }}</td>
             </tr>
             {% empty %}
             <tr>
@@ -64,6 +85,7 @@
                 <th>Fin</th>
                 <th>Durée (jours)</th>
                 <th>Raison</th>
+                <th>Superviseur</th>
             </tr>
         </thead>
         <tbody>
@@ -74,10 +96,11 @@
                 <td>{{ demande.date_fin }}</td>
                 <td>{{ demande.duree }}</td>
                 <td>{{ demande.raison }}</td>
+                <td>{{ demande.employe.superviseur.user.first_name }} {{ demande.employe.superviseur.user.last_name }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5">Aucune demande de congé approuvée.</td>
+                <td colspan="6">Aucune demande de congé approuvée.</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -91,6 +114,7 @@
             <th>Fin</th>
             <th>Durée (jours)</th>
             <th>Raison</th>
+            <th>Superviseur</th>
         </tr>
     </thead>
     <tbody>
@@ -101,34 +125,14 @@
             <td>{{ demande.date_fin }}</td>
             <td>{{ demande.duree }}</td>
             <td>{{ demande.raison }}</td>
+            <td>{{ demande.employe.superviseur.user.first_name }} {{ demande.employe.superviseur.user.last_name }}</td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="5">Aucune demande de congé refusée.</td>
+            <td colspan="6">Aucune demande de congé refusée.</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
-    <h3>Soldes de congé des employés</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Employé</th>
-                <th>Solde de congé (jours)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for employe in employes %}
-            <tr>
-                <td>{{ employe.user.first_name }} {{ employe.user.last_name }}</td>
-                <td>{{ employe.solde_conge }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="2">Aucun employé trouvé.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 {% endblock %}

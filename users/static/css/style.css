@@ -253,7 +253,7 @@ textarea:focus, select:focus {
     font-size: 16px;
     font-weight: bold;
 }
-.security-button, .return-button{
+.security-button, .return-button, .settings-button{
     display: block;
     padding: 10px;
     text-align: center;
@@ -265,14 +265,14 @@ textarea:focus, select:focus {
     width: 120px;
     margin: 10px 5px;
 }
-.security-button:hover{
+.security-button:hover, .settings-button:hover{
     background-color: #218838;
 }
-.return-button{
+.return-button, .settings-button{
     background-color: white;
     color: #333333;
 }
-.return-button:hover{
+.return-button:hover, .settings-button:hover{
     background-color:  #e0e0e0;
 }
 

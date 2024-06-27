@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django import forms
-from .models import DemandeConge, TypeConge
+from .models import DemandeConge, TypeConge, Equipe
 from django.contrib.auth.forms import PasswordChangeForm as AuthPasswordChangeForm
 
 class PasswordChangeForm(AuthPasswordChangeForm):
@@ -33,3 +33,22 @@ class DemandeCongeForm(forms.ModelForm):
             raise ValidationError("La demande de congé doit être pour des dates futures.")
 
         return cleaned_data
+    
+
+
+class TypeCongeForm(forms.ModelForm):
+    class Meta:
+        model = TypeConge
+        fields = ['nom']
+        labels = {
+            'nom': 'Nom du type de congé',
+        }
+
+class EquipeForm(forms.ModelForm):
+    class Meta:
+        model = Equipe
+        fields = ['nom', 'seuil_conges']
+        labels = {
+            'nom': 'Nom de l\'équipe',
+            'seuil_conges': 'Seuil de congés',
+        }

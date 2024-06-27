@@ -1,8 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from .models import Superviseur, Employe, RessourcesHumaines, DemandeConge
+from .models import Superviseur, Employe, RessourcesHumaines, DemandeConge, TypeConge, Equipe
 from django.http import HttpResponse
-from .forms import DemandeCongeForm
+from .forms import DemandeCongeForm, TypeCongeForm, EquipeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.shortcuts import render, redirect
@@ -48,6 +48,7 @@ def employe_index(request):
     }
     return render(request, 'employes/index.html', context)
 
+
 def superviseur_index(request):
     superviseur = Superviseur.objects.get(user=request.user)
     employes = Employe.objects.filter(superviseur=superviseur)
@@ -63,6 +64,21 @@ def superviseur_index(request):
         'demandes_conge_refusees': demandes_conge_refusees,
     }
     return render(request, 'superviseurs/index.html', context)
+
+def ressourceshumaines_index(request):
+    ressourceshumaines = RessourcesHumaines.objects.get(user=request.user)
+    employes = Employe.objects.all()
+    demandes_conge_en_attente = DemandeConge.objects.filter(etat='EN_ATTENTE')
+    demandes_conge_approuvees = DemandeConge.objects.filter(etat='APPROUVEE')
+    demandes_conge_refusees = DemandeConge.objects.filter(etat='REFUSEE')
+    context = {
+        'ressourceshumaines': ressourceshumaines,
+        'employes': employes,
+        'demandes_conge_en_attente': demandes_conge_en_attente,
+        'demandes_conge_approuvees': demandes_conge_approuvees,
+        'demandes_conge_refusees': demandes_conge_refusees,
+    }
+    return render(request, 'ressourceshumaines/index.html', context)
 
 def accepter(request, id):
     demande = get_object_or_404(DemandeConge, id=id)
@@ -85,6 +101,8 @@ def refuser(request, id):
 def security(request):
     if Superviseur.objects.filter(user=request.user).exists():
         return security_superviseur(request)
+    if RessourcesHumaines.objects.filter(user=request.user).exists():
+        return security_ressourceshumaines(request)
     else:
         return security_employe(request)
 def security_superviseur(request):
@@ -109,6 +127,17 @@ def security_employe(request):
         form = PasswordChangeForm(request.user)
     return render(request, 'employes/security.html', {'form': form})
 
+def security_ressourceshumaines(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user) 
+            return redirect('dashboard')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'ressourceshumaines/security.html', {'form': form})
+
 @login_required   
 def create(request):
     if request.method == 'POST':
@@ -128,11 +157,6 @@ def create(request):
     return render(request, 'employes/create.html', {'form': form})
 
 
-
-
-def ressourceshumaines_index(request):
-    pass
-
 def home(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
@@ -141,3 +165,46 @@ def home(request):
             return redirect('dashboard')
     else:
         return redirect('login')
+    
+
+def settings(request):
+    equipes = Equipe.objects.all()
+    types_conge = TypeConge.objects.all()
+
+    context = {
+        'equipes': equipes,
+        'types_conge': types_conge,
+    }
+
+    return render(request, 'ressourceshumaines/settings.html', context)
+
+
+def modify(request, id, model):
+    model_class = globals()[model]
+    instance = get_object_or_404(model_class, id=id)
+
+    if model == 'Equipe':
+        form_class = EquipeForm
+    elif model == 'TypeConge':
+        form_class = TypeCongeForm
+
+    if request.method == 'POST':
+        form = form_class(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('settings')
+    else:
+        form = form_class(instance=instance)
+
+    context = {
+        'form': form,
+        'model': model,
+    }
+
+    return render(request, 'ressourceshumaines/modify.html', context)
+
+def delete(request, id, model):
+    model_class = globals()[model]
+    instance = get_object_or_404(model_class, id=id)
+    instance.delete()
+    return redirect('settings')
