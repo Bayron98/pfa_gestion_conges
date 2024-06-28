@@ -71,17 +71,17 @@ def superviseur_index(request):
     demandes_conge_approuvees = DemandeConge.objects.filter(employe__in=employes, etat='APPROUVEE')
     demandes_conge_refusees = DemandeConge.objects.filter(employe__in=employes, etat='REFUSEE')
 
-    paginator = Paginator(demandes_conge_en_attente, 5)  # Affiche 5 objets par page
+    paginator = Paginator(demandes_conge_en_attente, 5)  
     page_number = request.GET.get('page_attente')
     demandes_conge_en_attente = paginator.get_page(page_number)
     nombre_demandes_conge_en_attente = paginator.count
 
-    paginator = Paginator(demandes_conge_approuvees, 5)  # Affiche 5 objets par page
+    paginator = Paginator(demandes_conge_approuvees, 5)  
     page_number = request.GET.get('page_approuvees')
     demandes_conge_approuvees = paginator.get_page(page_number)
     nombre_demandes_conge_approuvees = paginator.count
 
-    paginator = Paginator(demandes_conge_refusees, 5)  # Affiche 5 objets par page
+    paginator = Paginator(demandes_conge_refusees, 5)  
     page_number = request.GET.get('page_refusees')
     demandes_conge_refusees = paginator.get_page(page_number)
     nombre_demandes_conge_refusees = paginator.count
