@@ -21,7 +21,7 @@
         </div>
     {% endfor %}
     {% endif %}
-
+    <a class="reporting-button" href="{% url 'reporting' %}"><i class="fa-solid fa-chart-bar"></i> Reporting</a>
     <h3>Soldes de congé des employés</h3>
     <table>
         <thead>
@@ -45,8 +45,25 @@
             {% endfor %}
         </tbody>
     </table>
+    <div class="pagination">
+        <span class="step-links">
+            {% if employes.has_previous %}
+                <a href="?page_employes=1">&laquo; première</a>
+                <a href="?page_employes={{ employes.previous_page_number }}">&laquo; précédente</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ employes.number }} sur {{ employes.paginator.num_pages }}.
+            </span>
+    
+            {% if employes.has_next %}
+                <a href="?page_employes={{ employes.next_page_number }}">suivante &raquo;</a>
+                <a href="?page_employes={{ employes.paginator.num_pages }}">dernière &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 
-    <h3>Demandes de congé en attente</h3>
+    <h3>Demandes de congé en attente <span class="nbr">{{ nombre_demandes_conge_en_attente}}</span></h3>
     <table>
         <thead>
             <tr>
@@ -75,8 +92,25 @@
             {% endfor %}
         </tbody>
     </table>
+    <div class="pagination">
+        <span class="step-links">
+            {% if demandes_conge_en_attente.has_previous %}
+                <a href="?page_en_attente=1">&laquo; première</a>
+                <a href="?page_en_attente={{ demandes_conge_en_attente.previous_page_number }}">&laquo; précédente</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ demandes_conge_en_attente.number }} sur {{ demandes_conge_en_attente.paginator.num_pages }}.
+            </span>
+    
+            {% if demandes_conge_en_attente.has_next %}
+                <a href="?page_en_attente={{ demandes_conge_en_attente.next_page_number }}">suivante &raquo;</a>
+                <a href="?page_en_attente={{ demandes_conge_en_attente.paginator.num_pages }}">dernière &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 
-    <h3>Demandes de congé approuvées <span class="nbr">{{ demandes_conge_approuvees.count }}</span></h3>
+    <h3>Demandes de congé approuvées <span class="nbr">{{ nombre_demandes_conge_approuvees }}</span></h3>
     <table>
         <thead>
             <tr>
@@ -105,7 +139,24 @@
             {% endfor %}
         </tbody>
     </table>
-    <h3>Demandes de congé refusées <span class="nbr">{{ demandes_conge_refusees.count }}</span></h3>
+    <div class="pagination">
+        <span class="step-links">
+            {% if demandes_conge_approuvees.has_previous %}
+                <a href="?page_approuvees=1">&laquo; première</a>
+                <a href="?page_approuvees={{ demandes_conge_approuvees.previous_page_number }}">&laquo; précédente</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ demandes_conge_approuvees.number }} sur {{ demandes_conge_approuvees.paginator.num_pages }}.
+            </span>
+    
+            {% if demandes_conge_approuvees.has_next %}
+                <a href="?page_approuvees={{ demandes_conge_approuvees.next_page_number }}">suivante &raquo;</a>
+                <a href="?page_approuvees={{ demandes_conge_approuvees.paginator.num_pages }}">dernière &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    <h3>Demandes de congé refusées <span class="nbr">{{ nombre_demandes_conge_refusees }}</span></h3>
 <table>
     <thead>
         <tr>
@@ -134,5 +185,22 @@
         {% endfor %}
     </tbody>
 </table>
+<div class="pagination">
+    <span class="step-links">
+        {% if demandes_conge_refusees.has_previous %}
+            <a href="?page_refusees=1">&laquo; première</a>
+            <a href="?page_refusees={{ demandes_conge_refusees.previous_page_number }}">&laquo; précédente</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ demandes_conge_refusees.number }} sur {{ demandes_conge_refusees.paginator.num_pages }}.
+        </span>
+
+        {% if demandes_conge_refusees.has_next %}
+            <a href="?page_refusees={{ demandes_conge_refusees.next_page_number }}">suivante &raquo;</a>
+            <a href="?page_refusees={{ demandes_conge_refusees.paginator.num_pages }}">dernière &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 
 {% endblock %}

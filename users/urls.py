@@ -12,6 +12,7 @@ urlpatterns = [
     path('conges/settings/', views.settings, name='settings'),
     path('modify/<int:id>/<str:model>/', views.modify, name='modify'),
     path('delete/<int:id>/<str:model>/', views.delete, name='delete'),
+    path('reporting/', views.reporting, name='reporting'),
     # path('superviseur/dashboard/', views.superviseur_dashboard, name='superviseur_dashboard'),
     # path('employe/dashboard/', views.employe_dashboard, name='employe_dashboard'),
     # path('ressources_humaines/dashboard/', views.ressources_humaines_dashboard, name='ressources_humaines_dashboard'),

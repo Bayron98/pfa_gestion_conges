@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+
+
+{% block title %}Ressources Humaines{% endblock %}
+
+
+{% block topbar-left-container %}
+<div class="tb-title"><i class="fa-solid fa-user"></i> Espace Ressources Humaines : <span class="tp-content">{{ user.first_name }} {{ user.last_name }}</span></div>
+{% endblock %}
+
+{% block topbar-right-container %}
+<a class="return-button" href="{% url 'dashboard' %}"><i class="fa-solid fa-arrow-rotate-left"></i> Retour</a>
+<a class="settings-button" href="{% url 'settings' %}"><i class="fa-solid fa-cog"></i>  Congés</a>
+<a class="security-button" href="{% url 'security' %}"><i class="fa-solid fa-lock"></i> Securité</a>
+<a class="logout-button" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</a>
+{% endblock %}
+
+
+
+
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+<h2>Statistiques</h2>
+<div class="container">
+    <canvas id="demandesCongeChart"></canvas>
+    <canvas id="soldeCongeChart"></canvas>
+    <canvas id="typesCongeChart"></canvas>
+    <canvas id="demandesCongeApprouveesChart"></canvas>
+    <canvas id="historiqueCongesChart"></canvas>
+
+</div>
+
+
+
+<script>
+
+var ctx = document.getElementById('demandesCongeChart').getContext('2d');
+var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for item in demandes_conge_par_etat %}'{{ item.etat_display }}',{% endfor %}],
+            datasets: [{
+                label: 'Nombre de demandes de congé',
+                data: [{% for item in demandes_conge_par_etat %}{{ item.nombre }},{% endfor %}],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Le nombre de demandes de congé par état'
+                }
+            },
+            scales: {
+                y: {
+                  title: {
+                    display: true,
+                    text: 'Value'
+                  },
+                  min: 0,
+                  ticks: {
+                    stepSize: 1
+                  }
+                }
+              }
+        },
+  
+
+
+        
+    });
+var ctx = document.getElementById('soldeCongeChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for item in solde_conge_moyen_par_equipe %}'{{ item.equipe__nom }}',{% endfor %}],
+        datasets: [{
+            label: 'Solde de congé moyen',
+            data: [{% for item in solde_conge_moyen_par_equipe %}{{ item.solde_conge_moyen }},{% endfor %}],
+            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+            borderColor: 'rgba(153, 102, 255, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        plugins: {
+            title: {
+                display: true,
+                text: 'Le solde de congé moyen par équipe'
+            }
+        },
+        scales: {
+            y: {
+              title: {
+                display: true,
+                text: 'Value'
+              },
+              min: 0,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+    }
+});
+
+
+var ctx = document.getElementById('typesCongeChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: [{% for item in types_conges %}'{{ item.nom }}',{% endfor %}],
+        datasets: [{
+            data: [{% for item in nombre_conges_par_type %}{{ item.nombre }},{% endfor %}],
+            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)'],
+            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        plugins: {
+            title: {
+                display: true,
+                text: 'Répartition des types de congés'
+            }
+        }
+    }
+});
+
+var ctx = document.getElementById('demandesCongeApprouveesChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for item in demandes_conge_approuvees_par_equipe %}'{{ item.employe__equipe__nom }}',{% endfor %}],
+        datasets: [{
+            label: 'Nombre de demandes de congé approuvées',
+            data: [{% for item in demandes_conge_approuvees_par_equipe %}{{ item.nombre }},{% endfor %}],
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        plugins: {
+            title: {
+                display: true,
+                text: 'Le nombre des demandes de congé approuvées par équipe'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            }
+        }
+    }
+});
+
+var ctx = document.getElementById('historiqueCongesChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for item in historique_conges %}'{{ item.date_debut|date:"Y-m-d" }}',{% endfor %}],
+        datasets: [{
+            label: 'Nombre de congés approuvés',
+            data: [{% for item in historique_conges %}{{ item.nombre_conges }},{% endfor %}],
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        plugins: {
+            title: {
+                display: true,
+                text: 'Historique des congés approuvés'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            },
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'day'
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

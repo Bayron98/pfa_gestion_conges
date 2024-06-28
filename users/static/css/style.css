@@ -221,7 +221,7 @@ textarea:focus, select:focus {
     color: white;
     padding: 15px 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-
+    margin-bottom: 20px;
 }
 
 .topbar-left-container{
@@ -253,7 +253,7 @@ textarea:focus, select:focus {
     font-size: 16px;
     font-weight: bold;
 }
-.security-button, .return-button, .settings-button{
+.security-button, .return-button, .settings-button, .reporting-button{
     display: block;
     padding: 10px;
     text-align: center;
@@ -276,6 +276,14 @@ textarea:focus, select:focus {
     background-color:  #e0e0e0;
 }
 
+.reporting-button{
+    background-color: #007bff;
+    margin: 0px auto;
+}
+.reporting-button:hover{
+    background-color: #0056b3;
+}
+
 
 .logout-button{
     display: block;
@@ -294,3 +302,56 @@ textarea:focus, select:focus {
 .logout-button:hover{
     background-color: #b30000;
 }
+
+
+#demandesCongeChart, #soldeCongeChart, #typesCongeChart,  #demandesCongeApprouveesChart, #historiqueCongesChart {
+    max-width: 500px;
+    max-height: 300px;
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+}
+
+.container {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.pagination .step-links {
+    display: flex;
+    align-items: center;
+}
+
+.pagination .step-links a {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    width: 120px;
+}
+
+.pagination .step-links a:hover {
+    background-color: #ddd;
+}
+
+.pagination .step-links .current {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #ddd;
+}
+
