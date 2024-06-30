@@ -345,3 +345,15 @@ def envoyer_notification_email(demande):
     )
 
     api_instance.send_transac_email(email)
+
+
+@login_required
+def create_conge(request):
+    if request.method == 'POST':
+        form = TypeCongeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('settings')
+    else:
+        form = TypeCongeForm()
+    return render(request, 'ressourceshumaines/create.html', {'form': form})

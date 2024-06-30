@@ -31,6 +31,7 @@
                 <th>Debut</th>
                 <th>Fin</th>
                 <th>Durée (jours)</th>
+                <th>Type</th>
                 <th>Raison</th>
                 <th>Etat</th>
             </tr>
@@ -41,6 +42,7 @@
                 <td>{{ demande.date_debut }}</td>
                 <td>{{ demande.date_fin }}</td>
                 <td>{{ demande.duree }}</td>
+                <td>{{ demande.type_conge.nom }}</td>
                 <td>{{ demande.raison }}</td>
                 <td>{{ demande.get_etat_display }}</td>
             </tr>

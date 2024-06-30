@@ -10,6 +10,7 @@ urlpatterns = [
     path('refuser/<int:id>/', views.refuser, name='refuser'),
     path('security/', views.security, name='security'),
     path('conges/settings/', views.settings, name='settings'),
+    path('conges/create/', views.create_conge, name='create_conge'),
     path('modify/<int:id>/<str:model>/', views.modify, name='modify'),
     path('delete/<int:id>/<str:model>/', views.delete, name='delete'),
     path('reporting/', views.reporting, name='reporting'),

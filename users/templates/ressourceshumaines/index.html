@@ -28,6 +28,7 @@
             <tr>
                 <th>Employé</th>
                 <th>Solde de congé (jours)</th>
+                <th>Equipe</th>
                 <th>Superviseur</th>
             </tr>
         </thead>
@@ -36,11 +37,12 @@
             <tr>
                 <td>{{ employe.user.first_name }} {{ employe.user.last_name }}</td>
                 <td>{{ employe.solde_conge }}</td>
+                <td>{{ employe.equipe.nom }}</td>
                 <td>{{ employe.superviseur.user.first_name }} {{ employe.superviseur.user.last_name }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="3">Aucun employé trouvé.</td>
+                <td colspan="4">Aucun employé trouvé.</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -71,7 +73,9 @@
                 <th>Début</th>
                 <th>Fin</th>
                 <th>Durée (jours)</th>
+                <th>Type</th>
                 <th>Raison</th>
+                <th>Equipe</th>
                 <th>Superviseur</th>
             </tr>
         </thead>
@@ -82,12 +86,14 @@
                 <td>{{ demande.date_debut }}</td>
                 <td>{{ demande.date_fin }}</td>
                 <td>{{ demande.duree }}</td>
+                <td>{{ demande.type_conge.nom }}</td>
                 <td>{{ demande.raison }}</td>
+                <td>{{ demande.employe.equipe.nom }}</td>
                 <td>{{ demande.employe.superviseur.user.first_name }} {{ demande.employe.superviseur.user.last_name }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6">Aucune demande de congé en attente.</td>
+                <td colspan="8">Aucune demande de congé en attente.</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -118,7 +124,9 @@
                 <th>Début</th>
                 <th>Fin</th>
                 <th>Durée (jours)</th>
+                <th>Type</th>
                 <th>Raison</th>
+                <th>Equipe</th>
                 <th>Superviseur</th>
             </tr>
         </thead>
@@ -129,12 +137,14 @@
                 <td>{{ demande.date_debut }}</td>
                 <td>{{ demande.date_fin }}</td>
                 <td>{{ demande.duree }}</td>
+                <td>{{ demande.type_conge.nom }}</td>
                 <td>{{ demande.raison }}</td>
+                <td>{{ demande.employe.equipe.nom }}</td>
                 <td>{{ demande.employe.superviseur.user.first_name }} {{ demande.employe.superviseur.user.last_name }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6">Aucune demande de congé approuvée.</td>
+                <td colspan="8">Aucune demande de congé approuvée.</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -164,7 +174,9 @@
             <th>Début</th>
             <th>Fin</th>
             <th>Durée (jours)</th>
+            <th>Type</th>
             <th>Raison</th>
+            <th>Equipe</th>
             <th>Superviseur</th>
         </tr>
     </thead>
@@ -175,12 +187,14 @@
             <td>{{ demande.date_debut }}</td>
             <td>{{ demande.date_fin }}</td>
             <td>{{ demande.duree }}</td>
+            <td>{{ demande.type_conge.nom }}</td>
             <td>{{ demande.raison }}</td>
+            <td>{{ demande.employe.equipe.nom }}</td>
             <td>{{ demande.employe.superviseur.user.first_name }} {{ demande.employe.superviseur.user.last_name }}</td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="6">Aucune demande de congé refusée.</td>
+            <td colspan="8">Aucune demande de congé refusée.</td>
         </tr>
         {% endfor %}
     </tbody>
