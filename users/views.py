@@ -223,10 +223,45 @@ def create(request):
                 form.add_error(None, "La durée de la demande de congé est supérieure à votre solde de congé.")
             else:
                 demande.save()
+                envoyer_notification_email_superviseur(demande)
                 return redirect('dashboard')
     else:
         form = DemandeCongeForm()
     return render(request, 'employes/create.html', {'form': form})
+
+
+
+def envoyer_notification_email_superviseur(demande):
+    # Configuration de l'API Sendinblue
+    configuration = Configuration()
+    configuration.api_key['api-key'] = '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' 
+
+    api_client = ApiClient(configuration)
+    api_instance = TransactionalEmailsApi(api_client)
+
+    # Formatage des dates en français
+    date_debut = format_date(demande.date_debut, format='long', locale='fr')
+    date_fin = format_date(demande.date_fin, format='long', locale='fr')
+
+    # Sujet et contenu de l'e-mail
+    sujet = f"Nouvelle demande de congé de {demande.employe.user.first_name} {demande.employe.user.last_name}"
+    message = f"{demande.employe.user.first_name} {demande.employe.user.last_name} a fait une demande de congé pour la période du {date_debut} au {date_fin}."
+
+    # Récupération de l'adresse e-mail du superviseur
+    superviseur = demande.employe.superviseur
+
+    # Création de l'e-mail
+    email = SendSmtpEmail(
+        to=[SendSmtpEmailTo(email=superviseur.user.email)],
+        sender=SendSmtpEmailTo(email='badrbayour@gmail.com'), 
+        subject=sujet,
+        html_content=message
+    )
+
+    # Envoi de l'e-mail via l'API Sendinblue
+    api_instance.send_transac_email(email)
+
+
 
 
 def home(request):
