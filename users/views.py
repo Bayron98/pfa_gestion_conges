@@ -10,10 +10,11 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.db.models import Count
-from django.db.models import Avg
+from django.db.models import Avg, Sum
 from django.core.mail import send_mail
 from django.conf import settings as django_settings
 from django.core.paginator import Paginator
+from django.db.models import F
 
 
 def login_view(request):
@@ -328,8 +329,7 @@ def reporting(request):
         item['etat_display'] = etat_display_mapping[item['etat']]
 
     # Obtenir le solde de congé moyen par équipe
-    solde_conge_moyen_par_equipe = Employe.objects.values('equipe__nom').annotate(solde_conge_moyen=Avg('solde_conge'))
-
+    equipes = Equipe.objects.annotate(somme_conge=Sum('employe__solde_conge'), nombre_employes=Count('employe')).annotate(moyenne_conge=F('somme_conge') / F('nombre_employes')).values('nom', 'moyenne_conge')
     # Obtenir la répartition des types de congés
     types_conges = TypeConge.objects.values('nom')
     nombre_conges_par_type = DemandeConge.objects.values('type_conge__nom').annotate(nombre=Count('type_conge'))
@@ -341,7 +341,7 @@ def reporting(request):
 
     context = {
         'demandes_conge_par_etat': demandes_conge_par_etat,
-        'solde_conge_moyen_par_equipe': solde_conge_moyen_par_equipe,
+        'equipes': equipes,
         'types_conges': types_conges,
         'nombre_conges_par_type': nombre_conges_par_type,
         'demandes_conge_approuvees_par_equipe': demandes_conge_approuvees_par_equipe,
