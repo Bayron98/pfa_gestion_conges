@@ -11,7 +11,7 @@ Ce projet de fin d'année est une application de gestion de congés. Elle a ét�
 ![Espace Superviseur](screenshots/espace_superviseur.png)
 
 ## Tableau de bord ressources humaines
-![Tableau de bord ressources humaines](screenshots/tableau_de_bord_rh.png)
+![Tableau de bord ressources humaines](screenshots/dashboard_rh.png)
 
 ## Espace de gestion des paramètres de congés
 ![Espace de gestion des paramètres de congés](screenshots/parametres_conges_rh.png)
